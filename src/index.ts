@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { Message, Client } from "discord.js";
+import quests from "./quests";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ bot.on("message", (message: Message) => {
     if (taggedUser.username === "HeckBot") {
       const command = message.cleanContent.replace("@HeckBot", "").trim();
       if (command.toLocaleLowerCase() === "quests") {
-        message.reply("pong");
+        quests(message);
       }
     }
   }
