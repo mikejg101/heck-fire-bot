@@ -36,7 +36,7 @@ const quests = (message: Message) => {
     .map((quest, idx) =>
       idx === 0
         ? `${quest.quest} currently active`
-        : `${quest.quest} starts in ${quest.hoursTillQuestStarts} hours ${quest.minutesTillQuestStarts} minutes ${quest.secondsTillQuestStarts} seconds @${quest.questStartTimeString}`
+        : `${quest.quest} starts in ${quest.hoursTillQuestStarts} hours ${quest.minutesTillQuestStarts} minutes ${quest.secondsTillQuestStarts} seconds`
     )
     .reduce((acc, cur) => acc + "\n" + cur);
   message.reply(q);
