@@ -27,7 +27,7 @@ const ecosystem = {
       path: process.env.DEVELOPMENT_PATH,
       "pre-deploy-local": "echo 'This is a local executed command'",
       "post-deploy":
-        "npm install && pm2 reload ecosystem.config.js --env development"
+        "npm install && npm run build && pm2 reload ecosystem.config.js --env development"
     },
     production: {
       user: process.env.PRODUCTION_USER,
@@ -37,7 +37,7 @@ const ecosystem = {
       path: process.env.PRODUCTION_PATH,
       "pre-deploy-local": "echo 'This is a local executed command'",
       "post-deploy":
-        "npm install && pm2 reload ecosystem.config.js --env production"
+        "npm install && npm run build && pm2 reload ecosystem.config.js --env production"
     }
   }
 };
