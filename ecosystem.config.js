@@ -9,6 +9,7 @@ const ecosystem = {
       autorestart: true,
       watch: true,
       max_memory_restart: "1G",
+      append_env_to_name: true,
       env: {
         NODE_ENV: "development"
       },
@@ -20,7 +21,6 @@ const ecosystem = {
 
   deploy: {
     development: {
-      append_env_to_name: true,
       user: process.env.DEVELOPMENT_USER,
       host: process.env.DEVELOPMENT_HOST,
       ref: process.env.DEVELOPMENT_REF,
@@ -31,7 +31,6 @@ const ecosystem = {
         "npm install && npm run build && pm2 reload ecosystem.config.js --env development"
     },
     production: {
-      append_env_to_name: true,
       user: process.env.PRODUCTION_USER,
       host: process.env.PRODUCTION_HOST,
       ref: process.env.PRODUCTION_REF,
