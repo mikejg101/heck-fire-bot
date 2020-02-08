@@ -11,10 +11,12 @@ const ecosystem = {
       max_memory_restart: "1G",
       append_env_to_name: true,
       env: {
-        NODE_ENV: "development"
+        NODE_ENV: "development",
+        BOT_NAME: "HeckFireBot-development"
       },
       env_production: {
-        NODE_ENV: "production"
+        NODE_ENV: "production",
+        BOT_NAME: "HeckFireBot-production"
       }
     }
   ],

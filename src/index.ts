@@ -6,12 +6,15 @@ dotenv.config();
 
 const bot = new Client();
 const TOKEN = process.env.TOKEN;
-const botName = "HeckBot";
+const BOT_NAME = process.env.BOT_NAME;
+
+
 
 bot.login(TOKEN);
 
 bot.on("ready", () => {
   console.info(`Logged in as ${bot.user.tag}!`);
+  console.log(BOT_NAME);
 });
 
-bot.on("message", createMessageHandler(botName));
+bot.on("message", createMessageHandler(BOT_NAME as any));
