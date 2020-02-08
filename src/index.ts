@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Client } from "discord.js";
-import createMessageHandler from "./message-handler";
+import createMessageHandler from "./handlers/message-handler";
 
 dotenv.config();
 

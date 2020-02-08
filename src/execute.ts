@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
-import quests from "./quests";
-import shield from "./shield";
-import error from "./error";
+import quests from "./commands/quests";
+import shield from "./commands/shield";
+import error from "./commands/error";
 
 const execute = (command: string, message: Message) => {
   switch (command) {

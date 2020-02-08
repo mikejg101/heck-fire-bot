@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import execute from "./execute";
+import execute from "../execute";
 
 const createMessageHandler = (botName: string) => (message: Message) => {
   if (
