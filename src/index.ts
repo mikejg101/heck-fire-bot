@@ -11,7 +11,10 @@ const botName = "HeckBot";
 bot.login(TOKEN);
 
 bot.on("ready", () => {
+  console.info(`Logged in as ${bot.user.tag}!`);
   console.log(`Logged in as ${bot.user.tag}!`);
+  console.warn(`Logged in as ${bot.user.tag}!`);
+  console.error(`Logged in as ${bot.user.tag}!`);
 });
 
 bot.on("message", createMessageHandler(botName));
