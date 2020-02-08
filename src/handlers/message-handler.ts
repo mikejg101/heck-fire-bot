@@ -6,6 +6,7 @@ const createMessageHandler = (botName: string) => (message: Message) => {
     message.mentions.users.size > 0 &&
     message.mentions.users.first().username === botName
   ) {
+    console.log(message.author.username + ': ' + message.cleanContent);
     execute(message.cleanContent.split(" ")[1], message);
   }
 };
