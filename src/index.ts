@@ -1,25 +1,25 @@
-import dotenv from 'dotenv';
-import Discord from 'discord.js';
+import dotenv from "dotenv";
+import { Message, Client } from "discord.js";
 
 dotenv.config();
 
-const bot = new Discord.Client();
+const bot = new Client();
 const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
 
-bot.on('ready', () => {
-    console.info(`Logged in as ${bot.user.tag}!`);
+bot.on("ready", () => {
+  console.info(`Logged in as ${bot.user.tag}!`);
 });
 
-bot.on('message', msg => {
-    if(msg.mentions.users.size){
-        const taggedUser = msg.mentions.users.first();
-        if(taggedUser.username === 'HeckBot'){
-            const command = msg.cleanContent.replace('@HeckBot', '').trim();
-            if (command.toLocaleLowerCase() === 'ping'){
-                msg.reply('pong');
-            }
-        }
+bot.on("message", (message: Message) => {
+  if (message.mentions.users.size) {
+    const taggedUser = message.mentions.users.first();
+    if (taggedUser.username === "HeckBot") {
+      const command = message.cleanContent.replace("@HeckBot", "").trim();
+      if (command.toLocaleLowerCase() === "quests") {
+        message.reply("pong");
+      }
     }
+  }
 });
