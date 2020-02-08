@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
     "dev": "./node_modules/.bin/ts-node-dev ./src/index.ts",
-    "build": "./node_modules/.bin/tsc"
+    "build": "./node_modules/.bin/tsc",
+    "deploy:development": "pm2 deploy ecosystem.config.js development",
+    "deploy:production": "pm2 deploy ecosystem.config.js production"
   },
   "author": "Michael Goodwin",
   "license": "ISC",
