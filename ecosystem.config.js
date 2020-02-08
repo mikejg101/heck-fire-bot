@@ -20,24 +20,28 @@ const ecosystem = {
 
   deploy: {
     development: {
-      user: dotenv.DEVELOPMENT_USER,
-      host: dotenv.DEVELOPMENT_HOST,
-      ref: dotenv.DEVELOPMENT_REF,
-      repo: dotenv.DEVELOPMENT_REPO,
-      path: dotenv.DEVELOPMENT_PATH,
-      "post-deploy":
-        "npm install && pm2 reload ecosystem.config.js --env development"
+      user: process.env.DEVELOPMENT_USER,
+      host: process.env.DEVELOPMENT_HOST,
+      ref: process.env.DEVELOPMENT_REF,
+      repo: process.env.DEVELOPMENT_REPO,
+      path: process.env.DEVELOPMENT_PATH
+      // "pre-deploy-local" : "echo 'This is a local executed command'",
+      // "post-deploy":
+      //   "npm install && pm2 reload ecosystem.config.js --env development"
     },
     production: {
-      user: dotenv.PRODUCTION_USER,
-      host: dotenv.PRODUCTION_HOST,
-      ref: dotenv.PRODUCTION_REF,
-      repo: dotenv.PRODUCTION_REPO,
-      path: dotenv.PRODUCTION_PATH,
-      "post-deploy":
-        "npm install && pm2 reload ecosystem.config.js --env production"
+      user: process.env.PRODUCTION_USER,
+      host: process.env.PRODUCTION_HOST,
+      ref: process.env.PRODUCTION_REF,
+      repo: process.env.PRODUCTION_REPO,
+      path: process.env.PRODUCTION_PATH
+      // "pre-deploy-local": "echo 'This is a local executed command'",
+      // "post-deploy":
+      //   "npm install && pm2 reload ecosystem.config.js --env production"
     }
   }
 };
+
+console.log(ecosystem);
 
 module.exports = ecosystem;
