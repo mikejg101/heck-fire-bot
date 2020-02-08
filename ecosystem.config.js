@@ -24,24 +24,22 @@ const ecosystem = {
       host: process.env.DEVELOPMENT_HOST,
       ref: process.env.DEVELOPMENT_REF,
       repo: process.env.DEVELOPMENT_REPO,
-      path: process.env.DEVELOPMENT_PATH
-      // "pre-deploy-local" : "echo 'This is a local executed command'",
-      // "post-deploy":
-      //   "npm install && pm2 reload ecosystem.config.js --env development"
+      path: process.env.DEVELOPMENT_PATH,
+      "pre-deploy-local": "echo 'This is a local executed command'",
+      "post-deploy":
+        "npm install && pm2 reload ecosystem.config.js --env development"
     },
     production: {
       user: process.env.PRODUCTION_USER,
       host: process.env.PRODUCTION_HOST,
       ref: process.env.PRODUCTION_REF,
       repo: process.env.PRODUCTION_REPO,
-      path: process.env.PRODUCTION_PATH
-      // "pre-deploy-local": "echo 'This is a local executed command'",
-      // "post-deploy":
-      //   "npm install && pm2 reload ecosystem.config.js --env production"
+      path: process.env.PRODUCTION_PATH,
+      "pre-deploy-local": "echo 'This is a local executed command'",
+      "post-deploy":
+        "npm install && pm2 reload ecosystem.config.js --env production"
     }
   }
 };
-
-console.log(ecosystem);
 
 module.exports = ecosystem;
