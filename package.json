@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
-    "dev": "./node_modules/.bin/ts-node-dev ./src/index.ts",
+    "dev": "env BOT_NAME=HeckFireBot-development ./node_modules/.bin/ts-node-dev ./src/index.ts",
     "build": "./node_modules/.bin/tsc",
     "deploy:development": "pm2 deploy ecosystem.config.js development",
     "deploy:production": "pm2 deploy ecosystem.config.js production"
@@ -14,14 +14,17 @@
   "author": "Michael Goodwin",
   "license": "ISC",
   "dependencies": {
+    "@types/moment": "^2.13.0",
     "discord.js": "^11.5.1",
     "dotenv": "^8.1.0",
     "luxon": "^1.22.0",
+    "moment": "^2.24.0",
     "node-persist": "^3.0.5"
   },
   "devDependencies": {
     "@types/luxon": "^1.21.0",
     "@types/node": "^13.7.0",
+    "@types/node-persist": "^3.0.0",
     "ts-node": "^8.6.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.5"

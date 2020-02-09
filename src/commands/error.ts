@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-const error = (message: Message) => {
+const error = (message: Message, storage: any) => {
     message.reply("Does not compute!");
 };
 
