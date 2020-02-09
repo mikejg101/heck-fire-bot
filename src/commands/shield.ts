@@ -3,8 +3,6 @@ import { setTimeout } from "timers";
 import moment = require("moment");
 
 const shieldTypes = {
-  1: { type: "minutes" },
-  5: { type: "minutes" },
   4: { type: "hours" },
   8: { type: "hours" },
   12: { type: "hours" },
