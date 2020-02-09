@@ -3,16 +3,16 @@ import quests from "./commands/quests";
 import shield from "./commands/shield";
 import error from "./commands/error";
 
-const execute = (command: string, message: Message) => {
+const execute = async (command: string, message: Message, storage: any) => {
   switch (command) {
     case "quests":
-      quests(message);
+      await quests(message, storage);
       break;
     case "shield":
-      shield(message);
+      await shield(message, storage);
       break;
     default:
-      error(message);
+      await error(message, storage);
       break;
   }
 };

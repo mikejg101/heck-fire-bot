@@ -3,7 +3,7 @@ import { DateTime, Interval } from "luxon";
 
 const firstQuest = DateTime.fromISO("2018-02-13T06:00:00Z");
 
-const quests = (message: Message) => {
+const quests = (message: Message, storage: any) => {
   const current = DateTime.local();
   const interval = Interval.fromDateTimes(firstQuest, current).length("hours");
 

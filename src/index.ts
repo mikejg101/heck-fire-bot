@@ -1,20 +1,24 @@
 import dotenv from "dotenv";
-import { Client } from "discord.js";
 import createMessageHandler from "./handlers/message-handler";
+import createBot from "./bot";
+import createStorage from "./storage";
+import moment from "moment";
 
-dotenv.config();
+(async () => {
+  try {
+    dotenv.config();
+    const TOKEN: any = process.env.TOKEN;
+    const BOT_NAME: any = process.env.BOT_NAME;
+    
+    const storage = await createStorage();
+    const bot = await createBot(BOT_NAME, TOKEN, storage);
 
-const bot = new Client();
-const TOKEN = process.env.TOKEN;
-const BOT_NAME = process.env.BOT_NAME;
-
-
-
-bot.login(TOKEN);
-
-bot.on("ready", () => {
-  console.info(`Logged in as ${bot.user.tag}!`);
-  console.log(BOT_NAME);
-});
-
-bot.on("message", createMessageHandler(BOT_NAME as any));
+    bot.on(
+      "message",
+      async message =>
+        await (await createMessageHandler(BOT_NAME as any, storage))(message)
+    );
+  } catch (e) {
+    console.error(e);
+  }
+})();
