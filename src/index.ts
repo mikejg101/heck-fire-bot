@@ -1,23 +1,25 @@
 import dotenv from "dotenv";
-import createMessageHandler from "./handlers/message-handler";
-import createBot from "./bot";
 import createStorage from "./storage";
-import moment from "moment";
+import { HeckFireBot } from "./models/heck-fire-bot";
+import { readyEventHandler } from "./handlers/ready-handler";
+import createLogger from "./utilities/logger";
+import { messageEventHandler } from "./handlers/message-handler";
 
 (async () => {
   try {
     dotenv.config();
+    const logger = createLogger();
     const TOKEN: any = process.env.TOKEN;
     const BOT_NAME: any = process.env.BOT_NAME;
     
     const storage = await createStorage();
-    const bot = await createBot(BOT_NAME, TOKEN, storage);
+    const bot = new HeckFireBot(BOT_NAME, TOKEN, storage, logger);
 
-    bot.on(
-      "message",
-      async message =>
-        await (await createMessageHandler(BOT_NAME as any, storage))(message)
-    );
+    bot.setReadyHandler(readyEventHandler);
+    bot.setMessageHandler(messageEventHandler);
+
+    await bot.login();
+    // const bot = await createBot(BOT_NAME, TOKEN, storage);
   } catch (e) {
     console.error(e);
   }

@@ -1,98 +1,137 @@
-import { Message } from "discord.js";
 import { setTimeout } from "timers";
-import moment = require("moment");
+import moment from "moment";
+import { Command } from "./command";
+import { supportedShieldTypes, ShieldDurationTypes } from "../models/shield";
+import { User } from "discord.js";
+import { Errors } from "../models/errors";
+import { HeckFireBot } from "../models/heck-fire-bot";
 
-const shieldTypes = {
-  4: { type: "hours" },
-  8: { type: "hours" },
-  12: { type: "hours" },
-  24: { type: "hours" },
-  3: { type: "days" },
-  7: { type: "days" }
+const diff = (time: any) => moment(time).diff(moment(), "milliseconds");
+
+export const addShieldFromStorage = async (bot: HeckFireBot, shield: any) => {
+  if (moment(shield.earlyWarning).isAfter(moment())) {
+    const milliseconds = diff(shield.earlyWarning);
+    bot.logger.info(
+      `adding ${shield.user}'s shield early warning after restart`
+    );
+    setTimeout(async () => {
+      const user = await bot.fetchUser(shield.id);
+      user.send("Your shield is about to expire");
+    }, milliseconds);
+  }
+  if (moment(shield.finalWarning).isAfter(moment())) {
+    const milliseconds = diff(shield.finalWarning);
+    bot.logger.info(
+      `adding ${shield.user}'s shield final warning after restart`
+    );
+    setTimeout(async () => {
+      const user = await bot.fetchUser(shield.id);
+      user.send("Your shield has expired");
+    }, milliseconds);
+  }
 };
 
-const shield = async (message: Message, storage: any) => {
+const getSupportedDuration = (interval: number) => {
+  return supportedShieldTypes.hasOwnProperty(interval)
+    ? (supportedShieldTypes as any)[interval]
+    : undefined;
+};
+
+const userHasActiveShield = (userData?: any) => {
+  return (
+    userData &&
+    userData.shield &&
+    moment(userData.shield.finalWarning).isAfter(moment())
+  );
+};
+
+const shield = async (command: Command, storage: any) => {
   try {
-    const interval = parseInterval(message);
-    if (!shieldTypes.hasOwnProperty(interval)) {
-      message.reply(`${interval} shield duration is not supported`);
-    } else {
-      const type = (shieldTypes as any)[interval].type;
-      const userData = await storage.getItem(message.author.id);
-      let earlyWarning = getEarlyWarning(type, interval);
-      let finalWarning = getFinalWarning(type, interval);
+    const interval = Number(command.options[0]);
+    const duration = getSupportedDuration(interval);
 
-      if (
-        userData &&
-        userData.shield &&
-        moment(userData.shield.finalWarning).isAfter(moment())
-      ) {
-        message.reply("You need to wait for the current shield to expire");
-      } else {
-        message.reply("I will direct message you when your shield is expiring");
-        await storage.setItem(
-          message.author.id,
-          {
-            shield: {
-              id: message.author.id,
-              user: message.author.username,
-              type,
-              interval,
-              earlyWarning: moment()
-                .add(earlyWarning)
-                .format(),
-              finalWarning: moment()
-                .add(finalWarning)
-                .format()
-            }
-          },
-          {
-            ttl: moment()
-              .add(finalWarning)
-              .toDate()
-          } as any
-        );
-        if (earlyWarning !== 0) {
-          setTimeout(() => {
-            message.author.send("Your shield is about to expire");
-          }, earlyWarning);
-        }
-
-        if (finalWarning !== 0) {
-          setTimeout(() => {
-            message.author.send("Your shield has expired");
-          }, finalWarning);
-        }
-      }
+    if (!duration) {
+      throw new Error(Errors.UNSUPPORTED_SHIELD_DURATION);
     }
+
+    const type = duration.type;
+    const userData = await storage.getItem(command.message.author.id);
+    let earlyWarning = getWarningMilliseconds(type, interval, 0.5);
+    let finalWarning = getWarningMilliseconds(type, interval);
+
+    if (userHasActiveShield(userData)) {
+      throw new Error(Errors.SHIELD_ALREADY_ACTIVE);
+    }
+
+    command.message.reply(
+      "I will direct message you when your shield is expiring"
+    );
+
+    await storage.setItem(
+      command.message.author.id,
+      {
+        shield: {
+          id: command.message.author.id,
+          user: command.message.author.username,
+          type,
+          interval,
+          earlyWarning: getWarningTime(earlyWarning),
+          finalWarning: getWarningTime(finalWarning)
+        }
+      },
+      {
+        ttl: moment()
+          .add(finalWarning)
+          .toDate()
+      } as any
+    );
+
+    scheduleWarning(earlyWarning, command.message.author);
+    scheduleWarning(finalWarning, command.message.author);
   } catch (e) {
-    message.reply("Does Not Compute!");
+    if (e.message === Errors.UNSUPPORTED_SHIELD_DURATION) {
+      command.message.reply(
+        `${Number(command.options[0])} shield duration is not supported`
+      );
+    } else if (e.message === Errors.SHIELD_ALREADY_ACTIVE) {
+      command.message.reply(
+        "You need to wait for the current shield to expire"
+      );
+    } else {
+      command.message.reply("Does not compute!");
+    }
   }
 };
 
-const getFinalWarning = (type: string, interval: number) => {
-  if (type === "minutes") {
-    return interval * 60 * 1000;
-  } else if (type === "hours") {
-    return interval * 60 * 60 * 1000;
-  } else if (type === "days") {
-    return interval * 24 * 60 * 60 * 1000;
+const scheduleWarning = (warning: number, user: User) => {
+  if (warning !== 0) {
+    setTimeout(() => {
+      user.send("Your shield is about to expire");
+    }, warning);
   }
-  return 0;
 };
 
-const getEarlyWarning = (type: string, interval: number) => {
-  if (type === "minutes") {
-    return (interval - 0.5) * 60 * 1000;
-  } else if (type === "hours") {
-    return (interval - 0.5) * 60 * 60 * 1000;
-  } else if (type === "days") {
-    return (interval - 0.5) * 24 * 60 * 60 * 1000;
+const getWarningMilliseconds = (
+  type: string,
+  interval: number,
+  modifier: number = 0
+) => {
+  switch (type) {
+    case ShieldDurationTypes.MINUTES:
+      return (interval - modifier) * 60 * 1000;
+    case ShieldDurationTypes.HOURS:
+      return (interval - modifier) * 60 * 60 * 1000;
+    case ShieldDurationTypes.DAYS:
+      return (interval - modifier) * 24 * 60 * 60 * 1000;
+    default:
+      return 0;
   }
-  return 0;
 };
 
-const parseInterval = (message: Message) =>
-  Number(message.cleanContent.split(" ")[2]);
+const getWarningTime = (milliseconds: number) => {
+  return moment()
+    .add(milliseconds)
+    .format();
+};
 
 export default shield;

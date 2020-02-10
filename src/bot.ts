@@ -49,3 +49,10 @@ const createBot = async (botName: string, token: string, storage: any) => {
 };
 
 export default createBot;
+
+
+    // bot.on(
+    //   "message",
+    //   async message =>
+    //     await (await createMessageHandler(BOT_NAME as any, storage))(message)
+    // );

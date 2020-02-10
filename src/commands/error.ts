@@ -1,7 +1,7 @@
-import { Message } from "discord.js";
+import { Command } from "./command";
 
-const error = (message: Message, storage: any) => {
-    message.reply("Does not compute!");
+const error = (command: Command, storage: any) => {
+  command.message.reply("Does not compute!");
 };
 
 export default error;

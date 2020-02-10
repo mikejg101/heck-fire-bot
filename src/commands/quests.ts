@@ -1,9 +1,10 @@
-import { Message } from "discord.js";
 import { DateTime, Interval } from "luxon";
+import { Command } from "./command";
+import { QuestTypes } from "../models/quest";
 
 const firstQuest = DateTime.fromISO("2018-02-13T06:00:00Z");
 
-const quests = (message: Message, storage: any) => {
+const quests = (command: Command, storage: any) => {
   const current = DateTime.local();
   const interval = Interval.fromDateTimes(firstQuest, current).length("hours");
 
@@ -39,33 +40,33 @@ const quests = (message: Message, storage: any) => {
         : `${quest.quest} starts in ${quest.hoursTillQuestStarts} hours ${quest.minutesTillQuestStarts} minutes ${quest.secondsTillQuestStarts} seconds`
     )
     .reduce((acc, cur) => acc + "\n" + cur);
-  message.reply(q);
+  command.message.reply(q);
 };
 
 const findQuest = (k: any) => {
   switch (k) {
     case 1:
-      return "Resource Gathering";
+      return QuestTypes.RESOURCE_GATHERING;
     case 2:
-      return "Troop Training";
+      return QuestTypes.TROOP_TRAINING;
     case 3:
-      return "Resource Gathering";
+      return QuestTypes.RESOURCE_GATHERING;
     case 4:
-      return "Research";
+      return QuestTypes.RESEARCH;
     case 5:
-      return "Troop Training";
+      return QuestTypes.TROOP_TRAINING;
     case 6:
-      return "Monster Slaying";
+      return QuestTypes.MONSTER_SLAYING;
     case 7:
-      return "Might Growth";
+      return QuestTypes.MIGHT_GROWTH;
     case 8:
-      return "Resource Gathering";
+      return QuestTypes.RESOURCE_GATHERING;
     case 9:
-      return "Dragon Growth";
+      return QuestTypes.DRAGON_GROWTH;
     case 10:
-      return "Monster Slaying";
+      return QuestTypes.MONSTER_SLAYING;
     case 11:
-      return "Might Growth";
+      return QuestTypes.MIGHT_GROWTH;
     default:
       return "ERROR";
   }
