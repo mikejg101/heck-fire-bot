@@ -86,8 +86,16 @@ const shield = async (command: Command, storage: any) => {
       } as any
     );
 
-    scheduleWarning(earlyWarning, command.message.author);
-    scheduleWarning(finalWarning, command.message.author);
+    scheduleWarning(
+      earlyWarning,
+      command.message.author,
+      "Your shield is about to expire"
+    );
+    scheduleWarning(
+      finalWarning,
+      command.message.author,
+      "Your shield has expired"
+    );
   } catch (e) {
     if (e.message === Errors.UNSUPPORTED_SHIELD_DURATION) {
       command.message.reply(
@@ -103,10 +111,10 @@ const shield = async (command: Command, storage: any) => {
   }
 };
 
-const scheduleWarning = (warning: number, user: User) => {
+const scheduleWarning = (warning: number, user: User, message: string) => {
   if (warning !== 0) {
     setTimeout(() => {
-      user.send("Your shield is about to expire");
+      user.send(message);
     }, warning);
   }
 };
